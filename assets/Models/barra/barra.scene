@@ -1,0 +1,77 @@
+<scene exported_by="dominuskernel" export_time="1404576331.470696" formatVersion="1.0.1" previous_export_time="1403046252.228142" >
+  <nodes >
+    <node name="Armature" >
+      <position y="0.017204" x="4.274336" z="-0.010609" />
+      <rotation qw="0.707106" qx="0.707107" qy="0.000000" qz="-0.000000" />
+      <scale y="1.640791" x="1.000000" z="1.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <node name="Barra" >
+        <position y="0.006466" x="-0.005892" z="0.017204" />
+        <rotation qw="0.707106" qx="-0.707107" qy="0.000000" qz="-0.000000" />
+        <scale y="0.184462" x="0.163147" z="0.240598" />
+        <game >
+          <sensors />
+          <actuators />
+        </game>
+        <entity anisotropic_friction="False" name="Cube" mass="1.0" mass_radius="1.0" damping_trans="0.02539999969303608" friction_y="1.0" lock_trans_z="False" friction_x="1.0" friction_z="1.0" lock_trans_y="False" damping_rot="0.1589999943971634" ghost="False" meshFile="Cube.mesh" velocity_max="0.0" inertia_tensor="0.4000000059604645" lock_rot_z="False" actor="False" physics_type="STATIC" lock_rot_x="False" lock_rot_y="False" velocity_min="0.0" lock_trans_x="False" />
+      </node>
+    </node>
+    <node name="Lamp.001" >
+      <position y="0.376712" x="3.541139" z="0.083004" />
+      <rotation qw="0.570947" qx="0.169076" qy="0.755880" qz="-0.272171" />
+      <scale y="1.000000" x="1.000000" z="1.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <light name="Lamp.001" type="point" powerScale="1.0" shadow="true" >
+        <position y="0.376712" x="3.541139" z="0.083004" />
+        <lightAttenuation linear="0.03333335240683057" constant="1.0" quadratic="0.0" range="5000" />
+        <colourDiffuse b="1.0" r="1.0" g="1.0" />
+        <colourSpecular b="1.0" r="1.0" g="1.0" />
+        <colourShadow b="1.0" r="1.0" g="1.0" />
+      </light>
+    </node>
+    <node name="Lamp" >
+      <position y="1.936535" x="6.881926" z="-0.513778" />
+      <rotation qw="0.570947" qx="0.169076" qy="0.755880" qz="-0.272171" />
+      <scale y="1.000000" x="1.000000" z="1.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <light name="Lamp" type="point" powerScale="1.0" shadow="true" >
+        <position y="1.936535" x="6.881926" z="-0.513778" />
+        <lightAttenuation linear="0.03333335240683057" constant="1.0" quadratic="0.0" range="5000" />
+        <colourDiffuse b="1.0" r="1.0" g="1.0" />
+        <colourSpecular b="1.0" r="1.0" g="1.0" />
+        <colourShadow b="1.0" r="1.0" g="1.0" />
+      </light>
+    </node>
+    <node name="Camera" >
+      <position y="5.343665" x="7.481132" z="6.507640" />
+      <rotation qw="0.781600" qx="0.481707" qy="0.334251" qz="-0.212922" />
+      <scale y="1.000000" x="1.000000" z="1.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <camera projectionType="perspective" fov="0.5033799435163735" name="Camera" >
+        <clipping far="100.0" farPlaneDist="100.0" nearPlaneDist="0.10000000149011612" near="0.10000000149011612" />
+      </camera>
+    </node>
+  </nodes>
+  <externals >
+    <item type="material" >
+      <file name="/home/dominuskernel/Game/balltingo/assets/Models/barra/Rojo.material" />
+    </item>
+  </externals>
+  <environment >
+    <colourBackground b="0.05087608844041824" r="0.05087608844041824" g="0.05087608844041824" />
+    <colourDiffuse b="0.05087608844041824" r="0.05087608844041824" g="0.05087608844041824" />
+    <colourAmbient b="0.0" r="0.0" g="0.0" />
+  </environment>
+</scene>
