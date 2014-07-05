@@ -25,7 +25,7 @@ public class StageOne extends SimpleApplication{
     private BulletAppState bulletAppState;
     private RigidBodyControl landscape, bar_phy, ball_phy;
     private CollisionShape barShape;
-    private boolean left = false, right = false, begin=true;
+    private boolean left = false, right = false, begin=false;
     
     public static void main(String[] args){
         StageOne app = new StageOne();
@@ -109,7 +109,7 @@ public class StageOne extends SimpleApplication{
       
     //set the ball shoot
     public void shootBall(){
-        ball_phy.setLinearVelocity(Vector3f.UNIT_X.mult(20f));
+        ball_phy.setLinearVelocity(Vector3f.UNIT_X.mult(0.1f));
     }
     
     //set the actions
@@ -123,12 +123,15 @@ public class StageOne extends SimpleApplication{
         } 
         
         float velocity = ball_phy.getLinearVelocity().getX();
-        if(begin=true){
+        if(begin==true){
             if(velocity >=0){
-                ball_phy.applyForce(new Vector3f(5f,0,0), Vector3f.ZERO);
+                ball_phy.applyForce(new Vector3f(10f,0,0), Vector3f.ZERO);
+                ball_phy.setLinearVelocity(ball_phy.getLinearVelocity().mult(new Vector3f(1f,0f,1f)));
             }else{
-                ball_phy.applyForce(new Vector3f(-5f,0,0),Vector3f.ZERO);
+                ball_phy.applyForce(new Vector3f(-10f,0,0),Vector3f.ZERO);
+                ball_phy.setLinearVelocity(ball_phy.getLinearVelocity().mult(new Vector3f(1f,0f,1f)));
             }
+            
         }
     }
 }
