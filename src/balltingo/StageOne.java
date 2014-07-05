@@ -6,30 +6,26 @@ package balltingo;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
-import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.collision.shapes.CollisionShape;
-import com.jme3.bullet.control.BetterCharacterControl;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.input.controls.ActionListener;
-import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.scene.Node;
-import java.util.Random;
 
 /**
  *
  * @author dominuskernel
  */
 public class StageOne extends SimpleApplication{
-    private Spatial scene, barra, ball;
+    private Spatial scene, bar, ball;
     private BulletAppState bulletAppState;
-    private RigidBodyControl landscape, barra_phy, ball_phy;
-    private CollisionShape barraShape;
-    private boolean left = false, right = false, empezar=true;
+    private RigidBodyControl landscape, bar_phy, ball_phy;
+    private CollisionShape barShape;
+    private boolean left = false, right = false, begin=true;
     
     public static void main(String[] args){
         StageOne app = new StageOne();
@@ -45,7 +41,7 @@ public class StageOne extends SimpleApplication{
         //call the class for collisions
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
-        
+        bulletAppState.getPhysicsSpace().enableDebug(assetManager);
         //set camera location
         cam.setLocation(new Vector3f(-10f, 28f, 0f));
         
@@ -56,12 +52,13 @@ public class StageOne extends SimpleApplication{
         scene = assetManager.loadModel("Scenes/stage1/balltingo.j3o");
         scene.setLocalTranslation(0, 0, 1f);
         
-        barra = assetManager.loadModel("Models/barra/barra.j3o");
-        barra.setLocalScale(2f);
-        barra.setLocalTranslation(-10f, 6.5f, 0f);
+        bar = assetManager.loadModel("Models/barra/barra.j3o");
+        bar.setLocalScale(2f);
+        bar.setLocalTranslation(-10f, 7f, 0f);
+        
         
         ball = assetManager.loadModel("Models/bola/ball.j3o");
-        ball.setLocalTranslation(0f, 6.7f, 0f);
+        ball.setLocalTranslation(0f, 8f, 0f);
         ball.setLocalScale(0.5f);
         
         //set the collision scene and barra model
@@ -70,19 +67,19 @@ public class StageOne extends SimpleApplication{
         scene.addControl(landscape);
         bulletAppState.getPhysicsSpace().add(landscape);
         
-        barraShape = CollisionShapeFactory.createDynamicMeshShape((Node)barra);
-        barra_phy = new RigidBodyControl(barraShape,0f);
-        barra_phy.setKinematicSpatial(true);
-        barra_phy.setPhysicsLocation(new Vector3f(-10f, 6.5f, 0f));        
-        barra.addControl(barra_phy);
-        bulletAppState.getPhysicsSpace().add(barra);
+        barShape = CollisionShapeFactory.createDynamicMeshShape((Node)bar);
+        bar_phy = new RigidBodyControl(barShape,0f);
+        bar_phy.setPhysicsLocation(new Vector3f(-10f, 7f, 0f));
+        bar_phy.setKinematicSpatial(true);
+        bar.addControl(bar_phy);
+        bulletAppState.getPhysicsSpace().add(bar);
         
         ball_phy = new RigidBodyControl(1f);
         ball.addControl(ball_phy);
         bulletAppState.getPhysicsSpace().add(ball);
         //attach scene
         rootNode.attachChild(scene);
-        rootNode.attachChild(barra);
+        rootNode.attachChild(bar);
         rootNode.attachChild(ball);
         
         //call to setUpKeys method
@@ -105,7 +102,7 @@ public class StageOne extends SimpleApplication{
                 right = keyPressed;
             } else if(binding.equals("Shoot")){
                 shootBall(); 
-                empezar = true;
+                begin = true;
             }
         }
     };
@@ -118,15 +115,17 @@ public class StageOne extends SimpleApplication{
     //set the actions
     @Override
     public void simpleUpdate(float tpf){
-        if(left && barra_phy.getPhysicsLocation().z >= -8.5){  
-            barra_phy.setPhysicsLocation(new Vector3f(0,0,-20*tpf));
+        if(left && bar.getLocalTranslation().z >= -8.5){
+            bar.move(0,0,-20*tpf);  
+            bar_phy.setKinematic(true);
         }
-        if(right && barra_phy.getPhysicsLocation().z <= 8.5){
-            barra_phy.setPhysicsLocation(new Vector3f(0,0,20*tpf));
+        if(right && bar.getLocalTranslation().z <= 8.5){
+            bar.move(0,0,20*tpf);
+            bar_phy.setKinematic(true);
         } 
         
         float velocity = ball_phy.getLinearVelocity().getX();
-        if(empezar=true){
+        if(begin=true){
             if(velocity >=0){
                 ball_phy.applyForce(new Vector3f(5f,0,0), Vector3f.ZERO);
             }else{
