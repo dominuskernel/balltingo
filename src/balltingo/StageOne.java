@@ -41,7 +41,7 @@ public class StageOne extends SimpleApplication{
         //call the class for collisions
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
-        bulletAppState.getPhysicsSpace().enableDebug(assetManager);
+        
         //set camera location
         cam.setLocation(new Vector3f(-10f, 28f, 0f));
         
@@ -54,7 +54,7 @@ public class StageOne extends SimpleApplication{
         
         bar = assetManager.loadModel("Models/barra/barra.j3o");
         bar.setLocalScale(2f);
-        bar.setLocalTranslation(-10f, 7f, 0f);
+        bar.setLocalTranslation(-10f, 6.5f, 0f);
         
         
         ball = assetManager.loadModel("Models/bola/ball.j3o");
@@ -69,8 +69,8 @@ public class StageOne extends SimpleApplication{
         
         barShape = CollisionShapeFactory.createDynamicMeshShape((Node)bar);
         bar_phy = new RigidBodyControl(barShape,0f);
-        bar_phy.setPhysicsLocation(new Vector3f(-10f, 7f, 0f));
-        bar_phy.setKinematicSpatial(true);
+        bar_phy.setPhysicsLocation(new Vector3f(-10f, 6.5f, 0f));
+        bar_phy.setKinematic(true);
         bar.addControl(bar_phy);
         bulletAppState.getPhysicsSpace().add(bar);
         
@@ -117,11 +117,9 @@ public class StageOne extends SimpleApplication{
     public void simpleUpdate(float tpf){
         if(left && bar.getLocalTranslation().z >= -8.5){
             bar.move(0,0,-20*tpf);  
-            bar_phy.setKinematic(true);
         }
         if(right && bar.getLocalTranslation().z <= 8.5){
             bar.move(0,0,20*tpf);
-            bar_phy.setKinematic(true);
         } 
         
         float velocity = ball_phy.getLinearVelocity().getX();
