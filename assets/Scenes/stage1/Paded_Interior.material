@@ -1,12 +1,12 @@
-// Pared genrated by blender2ogre 0.6.0
+// Paded Interior genrated by blender2ogre 0.6.0
 
-material Pared 
+material Paded Interior 
 {
     receive_shadows on 
 
     technique
     {
-        pass Pared
+        pass Paded Interior
         {
             ambient 0.800000011920929 0.800000011920929 0.800000011920929 1.0
             diffuse 0.6400000190734865 0.6400000190734865 0.6400000190734865 1.0
@@ -32,7 +32,7 @@ material Pared
 
             texture_unit 
             {
-                texture ladrillo1.jpg
+                texture muro.jpg
                 tex_address_mode wrap
                 scale 1.0 1.0
                 tex_coord_set 0
