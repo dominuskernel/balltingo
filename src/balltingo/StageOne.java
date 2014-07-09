@@ -29,9 +29,10 @@ public class StageOne extends SimpleApplication{
     private Node boxNode;
     private Spatial scene, bar, ball, box[][];
     private BulletAppState bulletAppState;
-    private RigidBodyControl landscape, bar_phy, ball_phy, box_phy;
+    private RigidBodyControl landscape, bar_phy, ball_phy, box_phy[][];
     private CollisionShape barShape, boxShape;
     private boolean left = false, right = false, begin=false;
+    private Vector3f disappear;
     
     public static void main(String[] args){
         StageOne app = new StageOne();
@@ -47,7 +48,7 @@ public class StageOne extends SimpleApplication{
         //call the class for collisions
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
-        bulletAppState.getPhysicsSpace().enableDebug(assetManager);
+       // bulletAppState.getPhysicsSpace().enableDebug(assetManager);
         
         //set camera location
         cam.setLocation(new Vector3f(-10f, 28f, 0f));
@@ -98,6 +99,7 @@ public class StageOne extends SimpleApplication{
         
         //declare and attach every box
         box= new Spatial[3][9];
+        box_phy = new RigidBodyControl[3][9];
         
         float x = 0;
         float z = 0;
@@ -108,8 +110,8 @@ public class StageOne extends SimpleApplication{
                 box[f][c].setLocalScale(0.5f);
                 box[f][c].setLocalTranslation(22f-x,6.5f,-8.2f+z);
                 boxShape = CollisionShapeFactory.createBoxShape((Node)box[f][c]);
-                box_phy = new RigidBodyControl(boxShape,0f);
-                box[f][c].addControl(box_phy);
+                box_phy[f][c] = new RigidBodyControl(boxShape,0f);
+                box[f][c].addControl(box_phy[f][c]);
                 bulletAppState.getPhysicsSpace().add(box[f][c]);
                 z = z + 2f;
                 boxNode.attachChild(box[f][c]);
@@ -155,15 +157,21 @@ public class StageOne extends SimpleApplication{
         if(results.size()>0){
             CollisionResult closest = results.getFarthestCollision();
             Spatial s = closest.getGeometry();
-            System.out.println(s.getWorldTranslation());
+            disappear= s.getWorldTranslation();
             for(int f=0;f<box.length;f++){
                 for(int c=0;c<box[f].length;c++){
-                    if(s.getWorldTranslation().distance(box[f][c].getWorldTranslation())<1){
-                        box_phy.getPhysicsSpace().remove(box[f][c]);
+                    if(disappear.distance(box[f][c].getWorldTranslation())<0.5){
+                        boxNode.detachChild(box[f][c]);
                     }
                 }
             }
-            s.removeFromParent();
+            for(int f=0;f<box.length;f++){
+                for(int c=0;c<box[f].length;c++){
+                    if(disappear.distance(box[f][c].getWorldTranslation())<0.5){
+                        box_phy[f][c].getPhysicsSpace().remove(box[f][c]);
+                }
+            }
+        }
         }
     }
     //set the actions
