@@ -16,10 +16,9 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.KeyTrigger;
-import com.jme3.math.Ray;
 import com.jme3.scene.Node;
-import com.jme3.scene.control.Control;
-import com.sun.org.apache.bcel.internal.classfile.Code;
+
+
 
 /**
  *
@@ -27,12 +26,13 @@ import com.sun.org.apache.bcel.internal.classfile.Code;
  */
 public class StageOne extends SimpleApplication{
     private Node boxNode;
-    private Spatial scene, bar, ball, box[][];
+    private Spatial scene, bar, ball, box[][],boxDisappear;
     private BulletAppState bulletAppState;
-    private RigidBodyControl landscape, bar_phy, ball_phy, box_phy[][];
+    private RigidBodyControl landscape, bar_phy, ball_phy, box_phy[][],boxPhyDisappear;
     private CollisionShape barShape, boxShape;
-    private boolean left = false, right = false, begin=false;
+    private boolean left = false, right = false, begin=false, collision=false;
     private Vector3f disappear;
+    private float time=0;
     
     public static void main(String[] args){
         StageOne app = new StageOne();
@@ -48,7 +48,7 @@ public class StageOne extends SimpleApplication{
         //call the class for collisions
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
-       // bulletAppState.getPhysicsSpace().enableDebug(assetManager);
+        bulletAppState.getPhysicsSpace().enableDebug(assetManager);
         
         //set camera location
         cam.setLocation(new Vector3f(-10f, 28f, 0f));
@@ -150,30 +150,37 @@ public class StageOne extends SimpleApplication{
     }
     
     //when the ball collisions with some box. The box disappear. 
-    //This method is call in simpleUpdate
+    //This method is call from simpleUpdate
     public void collisionToBox(){
         CollisionResults results = new CollisionResults();
         boxNode.collideWith(ball.getWorldBound(), results);
+        /*If there is collision, this get the object and its physics when the ball 
+        * collisioned,the collision location, and the material dissappear but not 
+        * its physics*/
         if(results.size()>0){
+            collision = true;
             CollisionResult closest = results.getFarthestCollision();
             Spatial s = closest.getGeometry();
             disappear= s.getWorldTranslation();
             for(int f=0;f<box.length;f++){
                 for(int c=0;c<box[f].length;c++){
                     if(disappear.distance(box[f][c].getWorldTranslation())<0.5){
-                        boxNode.detachChild(box[f][c]);
+                        boxDisappear = box[f][c];
+                        boxPhyDisappear = box_phy[f][c];
+                        boxNode.detachChild(boxDisappear);
                     }
                 }
             }
-            for(int f=0;f<box.length;f++){
-                for(int c=0;c<box[f].length;c++){
-                    if(disappear.distance(box[f][c].getWorldTranslation())<0.5){
-                        box_phy[f][c].getPhysicsSpace().remove(box[f][c]);
-                }
-            }
-        }
-        }
+        }  
     }
+    
+    //The physics of hidden box of last method disappear after 0.1 second
+    void dissapearPhysics(){
+        boxPhyDisappear.getPhysicsSpace().remove(boxDisappear);
+        collision=false;
+        time=0;
+    }
+    
     //set the actions
     @Override
     public void simpleUpdate(float tpf){
@@ -193,8 +200,13 @@ public class StageOne extends SimpleApplication{
                 ball_phy.applyForce(new Vector3f(-10f,0,0),Vector3f.ZERO);
                 ball_phy.setLinearVelocity(ball_phy.getLinearVelocity().mult(new Vector3f(1f,0f,1f)));
             }
-            
+            collisionToBox();
         }
-        collisionToBox();
+        if(collision==true){
+            time = time + tpf;
+            if(time>=0.08){            
+              dissapearPhysics();
+            }
+        }
     }
 }
