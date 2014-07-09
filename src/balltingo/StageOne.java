@@ -9,22 +9,28 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
+import com.jme3.collision.CollisionResult;
+import com.jme3.collision.CollisionResults;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.KeyTrigger;
+import com.jme3.math.Ray;
 import com.jme3.scene.Node;
+import com.jme3.scene.control.Control;
+import com.sun.org.apache.bcel.internal.classfile.Code;
 
 /**
  *
  * @author dominuskernel
  */
 public class StageOne extends SimpleApplication{
-    private Spatial scene, bar, ball;
+    private Node boxNode;
+    private Spatial scene, bar, ball, box[][];
     private BulletAppState bulletAppState;
-    private RigidBodyControl landscape, bar_phy, ball_phy;
-    private CollisionShape barShape;
+    private RigidBodyControl landscape, bar_phy, ball_phy, box_phy;
+    private CollisionShape barShape, boxShape;
     private boolean left = false, right = false, begin=false;
     
     public static void main(String[] args){
@@ -41,6 +47,7 @@ public class StageOne extends SimpleApplication{
         //call the class for collisions
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
+        bulletAppState.getPhysicsSpace().enableDebug(assetManager);
         
         //set camera location
         cam.setLocation(new Vector3f(-10f, 28f, 0f));
@@ -48,7 +55,7 @@ public class StageOne extends SimpleApplication{
         //the camera look at direction
         cam.lookAt(new Vector3f(0f, 16.5f, 0f), Vector3f.UNIT_Y);
         
-        //Declare scene and model and set location for barra
+        //Declare scene and models and set location for bar, ball and the boxes
         scene = assetManager.loadModel("Scenes/stage1/balltingo.j3o");
         scene.setLocalTranslation(0, 0, 1f);
         
@@ -60,7 +67,7 @@ public class StageOne extends SimpleApplication{
         ball = assetManager.loadModel("Models/bola/ball.j3o");
         ball.setLocalTranslation(0f, 8f, 0f);
         ball.setLocalScale(0.5f);
-        
+                
         //set the collision scene and barra model
         CollisionShape sceneShape = CollisionShapeFactory.createMeshShape((Node)scene);
         landscape = new RigidBodyControl(sceneShape,0f);
@@ -77,11 +84,39 @@ public class StageOne extends SimpleApplication{
         ball_phy = new RigidBodyControl(1f);
         ball.addControl(ball_phy);
         bulletAppState.getPhysicsSpace().add(ball);
-        //attach scene
+        bulletAppState.getPhysicsSpace().addCollisionObject(ball_phy);
+        ball_phy.setCollisionGroup(0);
+        
+        //declare boxNode
+        boxNode = new Node("Boxes");
+        
+        //attach stage
         rootNode.attachChild(scene);
         rootNode.attachChild(bar);
         rootNode.attachChild(ball);
+        rootNode.attachChild(boxNode);
         
+        //declare and attach every box
+        box= new Spatial[3][9];
+        
+        float x = 0;
+        float z = 0;
+        
+        for(int f=0;f<box.length;f++){
+            for(int c=0;c<box[f].length; c++){
+                box[f][c] = assetManager.loadModel("Models/box/box.j3o");
+                box[f][c].setLocalScale(0.5f);
+                box[f][c].setLocalTranslation(22f-x,6.5f,-8.2f+z);
+                boxShape = CollisionShapeFactory.createBoxShape((Node)box[f][c]);
+                box_phy = new RigidBodyControl(boxShape,0f);
+                box[f][c].addControl(box_phy);
+                bulletAppState.getPhysicsSpace().add(box[f][c]);
+                z = z + 2f;
+                boxNode.attachChild(box[f][c]);
+            }
+            z = 0f;
+            x = x + 4f;
+        }
         //call to setUpKeys method
         setUpKeys();
     }
@@ -112,6 +147,25 @@ public class StageOne extends SimpleApplication{
         ball_phy.setLinearVelocity(Vector3f.UNIT_X.mult(0.1f));
     }
     
+    //when the ball collisions with some box. The box disappear. 
+    //This method is call in simpleUpdate
+    public void collisionToBox(){
+        CollisionResults results = new CollisionResults();
+        boxNode.collideWith(ball.getWorldBound(), results);
+        if(results.size()>0){
+            CollisionResult closest = results.getFarthestCollision();
+            Spatial s = closest.getGeometry();
+            System.out.println(s.getWorldTranslation());
+            for(int f=0;f<box.length;f++){
+                for(int c=0;c<box[f].length;c++){
+                    if(s.getWorldTranslation().distance(box[f][c].getWorldTranslation())<1){
+                        box_phy.getPhysicsSpace().remove(box[f][c]);
+                    }
+                }
+            }
+            s.removeFromParent();
+        }
+    }
     //set the actions
     @Override
     public void simpleUpdate(float tpf){
@@ -133,5 +187,6 @@ public class StageOne extends SimpleApplication{
             }
             
         }
+        collisionToBox();
     }
 }

@@ -1,0 +1,96 @@
+<scene export_time="1404669978.7515042" previous_export_time="0" exported_by="dominuskernel" formatVersion="1.0.1" >
+  <nodes >
+    <node name="Point.003" >
+      <position y="2.286154" z="-0.473531" x="-3.436864" />
+      <rotation qw="1.000000" qz="-0.000000" qy="0.000000" qx="0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <light name="Point.003" powerScale="1.0" type="point" >
+        <position y="2.286154" z="-0.473531" x="-3.436864" />
+        <lightAttenuation quadratic="0.0" range="5000" linear="0.04" constant="1.0" />
+        <colourDiffuse g="1.0" r="1.0" b="1.0" />
+        <colourSpecular g="1.0" r="1.0" b="1.0" />
+      </light>
+    </node>
+    <node name="Point.002" >
+      <position y="3.306774" z="3.260519" x="-0.330208" />
+      <rotation qw="1.000000" qz="-0.000000" qy="0.000000" qx="0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <light name="Point.002" powerScale="1.0" type="point" >
+        <position y="3.306774" z="3.260519" x="-0.330208" />
+        <lightAttenuation quadratic="0.0" range="5000" linear="0.04" constant="1.0" />
+        <colourDiffuse g="1.0" r="1.0" b="1.0" />
+        <colourSpecular g="1.0" r="1.0" b="1.0" />
+      </light>
+    </node>
+    <node name="Point.001" >
+      <position y="3.365554" z="-3.298246" x="1.314014" />
+      <rotation qw="1.000000" qz="-0.000000" qy="0.000000" qx="0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <light name="Point.001" powerScale="1.0" type="point" >
+        <position y="3.365554" z="-3.298246" x="1.314014" />
+        <lightAttenuation quadratic="0.0" range="5000" linear="0.04" constant="1.0" />
+        <colourDiffuse g="1.0" r="1.0" b="1.0" />
+        <colourSpecular g="1.0" r="1.0" b="1.0" />
+      </light>
+    </node>
+    <node name="Point" >
+      <position y="2.978587" z="0.025864" x="3.480489" />
+      <rotation qw="1.000000" qz="-0.000000" qy="0.000000" qx="0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <light name="Point" powerScale="1.0" type="point" >
+        <position y="2.978587" z="0.025864" x="3.480489" />
+        <lightAttenuation quadratic="0.0" range="5000" linear="0.04" constant="1.0" />
+        <colourDiffuse g="1.0" r="1.0" b="1.0" />
+        <colourSpecular g="1.0" r="1.0" b="1.0" />
+      </light>
+    </node>
+    <node name="Cube" >
+      <position y="0.848341" z="-0.000000" x="0.000000" />
+      <rotation qw="1.000000" qz="-0.000000" qy="0.000000" qx="0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_z="False" damping_rot="0.1589999943971634" mass="1.0" lock_rot_y="False" lock_rot_z="False" anisotropic_friction="False" mass_radius="1.0" ghost="False" lock_trans_y="False" damping_trans="0.02539999969303608" inertia_tensor="0.4000000059604645" friction_z="1.0" physics_type="STATIC" friction_x="1.0" name="Cube" friction_y="1.0" velocity_max="0.0" lock_rot_x="False" meshFile="Cube.mesh" lock_trans_x="False" velocity_min="0.0" actor="False" />
+    </node>
+    <node name="Camera" >
+      <position y="5.343665" z="6.507640" x="7.481132" />
+      <rotation qw="0.781600" qz="-0.212922" qy="0.334251" qx="0.481707" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <camera name="Camera" fov="0.5033799435163735" projectionType="perspective" >
+        <clipping near="0.10000000149011612" nearPlaneDist="0.10000000149011612" farPlaneDist="100.0" far="100.0" />
+      </camera>
+    </node>
+  </nodes>
+  <externals >
+    <item type="material" >
+      <file name="/home/dominuskernel/Game/balltingo/assets/Models/box/Box.material" />
+    </item>
+  </externals>
+  <environment >
+    <colourAmbient g="0.0" r="0.0" b="0.0" />
+    <colourDiffuse g="0.05087608844041824" r="0.05087608844041824" b="0.05087608844041824" />
+    <colourBackground g="0.05087608844041824" r="0.05087608844041824" b="0.05087608844041824" />
+  </environment>
+</scene>
