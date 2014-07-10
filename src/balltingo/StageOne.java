@@ -17,6 +17,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.scene.Node;
+import java.util.ArrayList;
 
 
 
@@ -26,9 +27,11 @@ import com.jme3.scene.Node;
  */
 public class StageOne extends SimpleApplication{
     private Node boxNode;
-    private Spatial scene, bar, ball, box[][],boxDisappear;
+    private Spatial scene, bar, ball, box[][];
     private BulletAppState bulletAppState;
-    private RigidBodyControl landscape, bar_phy, ball_phy, box_phy[][],boxPhyDisappear;
+    private RigidBodyControl landscape, bar_phy, ball_phy, box_phy[][];
+    private ArrayList<RigidBodyControl> boxPhyDisappear;
+    private ArrayList<Spatial> boxDisappear;
     private CollisionShape barShape, boxShape;
     private boolean left = false, right = false, begin=false, collision=false;
     private Vector3f disappear;
@@ -120,6 +123,8 @@ public class StageOne extends SimpleApplication{
             x = x + 4f;
         }
         //call to setUpKeys method
+        boxDisappear = new ArrayList<Spatial>();
+        boxPhyDisappear = new ArrayList<RigidBodyControl>();
         setUpKeys();
     }
     
@@ -165,19 +170,23 @@ public class StageOne extends SimpleApplication{
             for(int f=0;f<box.length;f++){
                 for(int c=0;c<box[f].length;c++){
                     if(disappear.distance(box[f][c].getWorldTranslation())<0.5){
-                        boxDisappear = box[f][c];
-                        boxPhyDisappear = box_phy[f][c];
-                        boxNode.detachChild(boxDisappear);
+                        boxDisappear.add(box[f][c]);
+                        boxPhyDisappear.add(box_phy[f][c]);
+                        boxNode.detachChild(box[f][c]);
                     }
                 }
             }
         }  
     }
     
-    //The physics of hidden box of last method disappear after 0.1 second
+    //The physics of hidden box of last method disappear after 1 second
     void dissapearPhysics(){
-        boxPhyDisappear.getPhysicsSpace().remove(boxDisappear);
+        for(int i=0;i<boxDisappear.size();i++){
+            boxPhyDisappear.get(i).getPhysicsSpace().remove(boxDisappear.get(i));
+        }
         collision=false;
+        boxPhyDisappear.clear();
+        boxDisappear.clear();
         time=0;
     }
     
@@ -204,7 +213,7 @@ public class StageOne extends SimpleApplication{
         }
         if(collision==true){
             time = time + tpf;
-            if(time>=0.08){            
+            if(time>=1){            
               dissapearPhysics();
             }
         }
