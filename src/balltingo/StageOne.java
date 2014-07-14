@@ -11,13 +11,17 @@ import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
+import com.jme3.font.BitmapFont;
+import com.jme3.font.BitmapText;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.KeyTrigger;
+import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Node;
 import java.util.ArrayList;
+import java.util.Random;
 
 
 
@@ -36,6 +40,9 @@ public class StageOne extends SimpleApplication{
     private boolean left = false, right = false, begin=false, collision=false;
     private Vector3f disappear;
     private float time=0;
+    private int score=0;
+    private BitmapText scoreText;
+    private Random zRandom = new Random();
     
     public static void main(String[] args){
         StageOne app = new StageOne();
@@ -51,7 +58,7 @@ public class StageOne extends SimpleApplication{
         //call the class for collisions
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
-        bulletAppState.getPhysicsSpace().enableDebug(assetManager);
+        //bulletAppState.getPhysicsSpace().enableDebug(assetManager);
         
         //set camera location
         cam.setLocation(new Vector3f(-10f, 28f, 0f));
@@ -126,6 +133,16 @@ public class StageOne extends SimpleApplication{
         boxDisappear = new ArrayList<Spatial>();
         boxPhyDisappear = new ArrayList<RigidBodyControl>();
         setUpKeys();
+        
+        //set text for score
+        
+        BitmapFont fontScore = assetManager.loadFont("Interface/Fonts/Console.fnt");
+        scoreText = new BitmapText(fontScore, false);
+        scoreText.setSize(30f);
+        scoreText.setColor(ColorRGBA.White);
+        scoreText.setText("Score: " + String.valueOf(score));
+        scoreText.setLocalTranslation(settings.getWidth()/1.3f,settings.getHeight(), 0);
+        guiNode.attachChild(scoreText);
     }
     
     //set the controls key for barra
@@ -163,13 +180,15 @@ public class StageOne extends SimpleApplication{
         * collisioned,the collision location, and the material dissappear but not 
         * its physics*/
         if(results.size()>0){
+            score = score + 10;
+            scoreText.setText("Score: " + String.valueOf(score));
             collision = true;
             CollisionResult closest = results.getFarthestCollision();
             Spatial s = closest.getGeometry();
             disappear= s.getWorldTranslation();
             for(int f=0;f<box.length;f++){
                 for(int c=0;c<box[f].length;c++){
-                    if(disappear.distance(box[f][c].getWorldTranslation())<0.5){
+                    if(disappear.distance(box[f][c].getWorldTranslation())<0.425){
                         boxDisappear.add(box[f][c]);
                         boxPhyDisappear.add(box_phy[f][c]);
                         boxNode.detachChild(box[f][c]);
@@ -196,17 +215,17 @@ public class StageOne extends SimpleApplication{
         if(left && bar.getLocalTranslation().z >= -8.5){
             bar.move(0,0,-20*tpf);  
         }
-        if(right && bar.getLocalTranslation().z <= 8.5){
+        if(right && bar.getLocalTranslation().z <= 8.4){
             bar.move(0,0,20*tpf);
         } 
         
         float velocity = ball_phy.getLinearVelocity().getX();
         if(begin==true){
             if(velocity >=0){
-                ball_phy.applyForce(new Vector3f(10f,0,0), Vector3f.ZERO);
+                ball_phy.applyForce(new Vector3f(15f,0,1f), Vector3f.ZERO);
                 ball_phy.setLinearVelocity(ball_phy.getLinearVelocity().mult(new Vector3f(1f,0f,1f)));
             }else{
-                ball_phy.applyForce(new Vector3f(-10f,0,0),Vector3f.ZERO);
+                ball_phy.applyForce(new Vector3f(-15f,0,-1f),Vector3f.ZERO);
                 ball_phy.setLinearVelocity(ball_phy.getLinearVelocity().mult(new Vector3f(1f,0f,1f)));
             }
             collisionToBox();
