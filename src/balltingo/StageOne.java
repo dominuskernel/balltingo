@@ -40,8 +40,8 @@ public class StageOne extends SimpleApplication{
     private boolean left = false, right = false, begin=false, collision=false;
     private Vector3f disappear;
     private float time=0;
-    private int score=0;
-    private BitmapText scoreText;
+    private int score=0, lifeNum=4;
+    private BitmapText scoreText, life;
     private Random zRandom = new Random();
     
     public static void main(String[] args){
@@ -134,8 +134,7 @@ public class StageOne extends SimpleApplication{
         boxPhyDisappear = new ArrayList<RigidBodyControl>();
         setUpKeys();
         
-        //set text for score
-        
+        //set text for the score and the life
         BitmapFont fontScore = assetManager.loadFont("Interface/Fonts/Console.fnt");
         scoreText = new BitmapText(fontScore, false);
         scoreText.setSize(30f);
@@ -143,6 +142,14 @@ public class StageOne extends SimpleApplication{
         scoreText.setText("Score: " + String.valueOf(score));
         scoreText.setLocalTranslation(settings.getWidth()/1.3f,settings.getHeight(), 0);
         guiNode.attachChild(scoreText);
+        
+        BitmapFont fontLife = assetManager.loadFont("Interface/Fonts/lifefont.fnt");
+        life = new BitmapText(fontLife,false);
+        life.setSize(30f);
+        life.setColor(ColorRGBA.Blue);
+        life.setText("LIFE: " + String.valueOf(lifeNum));
+        life.setLocalTranslation(settings.getWidth()/20,settings.getHeight(),0);
+        guiNode.attachChild(life);
     }
     
     //set the controls key for barra
@@ -222,10 +229,10 @@ public class StageOne extends SimpleApplication{
         float velocity = ball_phy.getLinearVelocity().getX();
         if(begin==true){
             if(velocity >=0){
-                ball_phy.applyForce(new Vector3f(15f,0,1f), Vector3f.ZERO);
+                ball_phy.applyForce(new Vector3f(12f,0,0f), Vector3f.ZERO);
                 ball_phy.setLinearVelocity(ball_phy.getLinearVelocity().mult(new Vector3f(1f,0f,1f)));
             }else{
-                ball_phy.applyForce(new Vector3f(-15f,0,-1f),Vector3f.ZERO);
+                ball_phy.applyForce(new Vector3f(-12f,0,0f),Vector3f.ZERO);
                 ball_phy.setLinearVelocity(ball_phy.getLinearVelocity().mult(new Vector3f(1f,0f,1f)));
             }
             collisionToBox();
