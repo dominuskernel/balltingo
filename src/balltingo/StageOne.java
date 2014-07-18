@@ -21,7 +21,7 @@ import com.jme3.input.controls.KeyTrigger;
 import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Node;
 import java.util.ArrayList;
-import java.util.Random;
+
 
 
 
@@ -37,12 +37,11 @@ public class StageOne extends SimpleApplication{
     private ArrayList<RigidBodyControl> boxPhyDisappear;
     private ArrayList<Spatial> boxDisappear;
     private CollisionShape barShape, boxShape;
-    private boolean left = false, right = false, begin=false, collision=false;
+    private boolean left = false, right = false, begin=false, collision=false, lose=false;
     private Vector3f disappear;
     private float time=0;
     private int score=0, lifeNum=4;
-    private BitmapText scoreText, life;
-    private Random zRandom = new Random();
+    private BitmapText scoreText, life, loseText;
     
     public static void main(String[] args){
         StageOne app = new StageOne();
@@ -76,7 +75,7 @@ public class StageOne extends SimpleApplication{
         
         
         ball = assetManager.loadModel("Models/bola/ball.j3o");
-        ball.setLocalTranslation(0f, 8f, 0f);
+        ball.setLocalTranslation(0f, 6.5f, 0f);
         ball.setLocalScale(0.5f);
                 
         //set the collision scene and barra model
@@ -150,6 +149,18 @@ public class StageOne extends SimpleApplication{
         life.setText("LIFE: " + String.valueOf(lifeNum));
         life.setLocalTranslation(settings.getWidth()/20,settings.getHeight(),0);
         guiNode.attachChild(life);
+        
+        
+        //set text when the player lose all the lifes
+        BitmapFont fontLose = assetManager.loadFont("Interface/Fonts/lose.fnt");
+        loseText = new BitmapText(fontLose,false);
+        loseText.setSize(100f);
+        loseText.setColor(ColorRGBA.Blue);
+        loseText.setLocalTranslation(settings.getWidth()/4f,settings.getHeight()/1.5f,0);
+        guiNode.attachChild(loseText);
+        
+        //the game begin stop
+        bulletAppState.setEnabled(false);
     }
     
     //set the controls key for barra
@@ -166,9 +177,10 @@ public class StageOne extends SimpleApplication{
                 left = keyPressed;
             } else if(binding.equals("Right")){
                 right = keyPressed;
-            } else if(binding.equals("Shoot")){
-                shootBall(); 
+            } else if(binding.equals("Shoot") && bulletAppState.isEnabled()==false && lose==false){
+                shootBall();                 
                 begin = true;
+                bulletAppState.setEnabled(true);
             }
         }
     };
@@ -215,6 +227,18 @@ public class StageOne extends SimpleApplication{
         boxDisappear.clear();
         time=0;
     }
+    //when the ball cross the bar line, the player loses a life
+    void loseLife(){
+        if(lifeNum > 0){
+            lifeNum = lifeNum - 1;
+            life.setText("LIFE: " + String.valueOf(lifeNum));
+        }
+        if(lifeNum == 0){
+            lose = true;
+            loseText.setText("YOU LOSE");
+            
+        }
+    }
     
     //set the actions
     @Override
@@ -241,6 +265,16 @@ public class StageOne extends SimpleApplication{
             time = time + tpf;
             if(time>=1){            
               dissapearPhysics();
+            }
+        }
+        
+        if(ball.getLocalTranslation().getX()<-3){  
+            bulletAppState.setEnabled(false);
+            time = time + tpf;
+            if(time>=0.8){
+                ball.setLocalTranslation(0f, 6.5f, 0f);
+                ball_phy.setPhysicsLocation(ball.getLocalTranslation());
+                loseLife();
             }
         }
     }
